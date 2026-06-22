@@ -8,6 +8,7 @@ import ratingRoutes from './routes/ratings';
 import fileRoutes from './routes/files';
 import collaborationRoutes from './routes/collaboration';
 import analyticsRoutes from './routes/analytics';
+import { apiRateLimit } from './middleware/rateLimit';
 
 function securityHeaders(req: express.Request, res: express.Response, next: express.NextFunction) {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -20,34 +21,12 @@ function securityHeaders(req: express.Request, res: express.Response, next: expr
   next();
 }
 
-const requests = new Map<string, { count: number; windowStart: number }>();
-const WINDOW_MS = 60_000;
-const MAX_REQ = 120;
-
-function rateLimit(req: express.Request, res: express.Response, next: express.NextFunction) {
-  const key = req.ip || 'unknown';
-  const now = Date.now();
-  const bucket = requests.get(key);
-
-  if (!bucket || now - bucket.windowStart > WINDOW_MS) {
-    requests.set(key, { count: 1, windowStart: now });
-    return next();
-  }
-
-  if (bucket.count >= MAX_REQ) {
-    return res.status(429).json({ message: 'Too many requests' });
-  }
-
-  bucket.count += 1;
-  return next();
-}
-
 export function createApp() {
   const app = express();
   app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
   app.use(express.json({ limit: '1mb' }));
   app.use(securityHeaders);
-  app.use(rateLimit);
+  app.use(apiRateLimit);
 
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok' });

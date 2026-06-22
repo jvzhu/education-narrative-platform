@@ -2,8 +2,10 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db, now } from '../data/store';
 import { AuthRequest, authenticate } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
+router.use(apiRateLimit);
 
 router.post('/share', authenticate, (req: AuthRequest, res) => {
   const { narrativeId, userId, level } = req.body as {

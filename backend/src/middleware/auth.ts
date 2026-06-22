@@ -2,7 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { db, Role } from '../data/store';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'test' ? 'test-secret' : '');
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is required');
+}
 
 export interface AuthRequest extends Request {
   user?: { id: string; role: Role; email: string };
@@ -10,6 +13,10 @@ export interface AuthRequest extends Request {
 
 export function createToken(payload: { id: string; role: Role; email: string }) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '2h' });
+}
+
+export function verifyToken(token: string) {
+  return jwt.verify(token, JWT_SECRET) as { id: string; role: Role; email: string };
 }
 
 export function authenticate(req: AuthRequest, res: Response, next: NextFunction) {
@@ -20,7 +27,7 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
 
   try {
     const token = authHeader.slice(7);
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; role: Role; email: string };
+    const decoded = verifyToken(token);
     const existingUser = db.users.find((user) => user.id === decoded.id);
     if (!existingUser) {
       return res.status(401).json({ message: 'Invalid token user' });

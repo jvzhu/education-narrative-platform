@@ -39,7 +39,12 @@ export const storyAPI = {
   deleteStory: (id) => api.delete(`/stories/${id}`),
   likeStory: (id) => api.post(`/stories/${id}/like`),
   bookmarkStory: (id) => api.post(`/stories/${id}/bookmark`),
-  getUserBookmarks: (userId) => api.get(`/stories/user/${userId}/bookmarks`),
+  getUserBookmarks: (userId) => {
+    if (!userId) {
+      return Promise.reject(new Error('userId is required'));
+    }
+    return api.get(`/stories/user/${userId}/bookmarks`);
+  },
 };
 
 // Comment APIs

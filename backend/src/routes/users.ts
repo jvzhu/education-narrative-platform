@@ -3,8 +3,10 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { db, now } from '../data/store';
 import { AuthRequest, authenticate, requireRole } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
+router.use(apiRateLimit);
 
 router.get('/', authenticate, requireRole('admin'), (_req, res) => {
   res.json(db.users.map(({ passwordHash, ...user }) => user));

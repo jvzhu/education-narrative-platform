@@ -2,9 +2,11 @@ import { Request, Response, Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db, logActivity, now } from '../data/store';
 import { AuthRequest, authenticate } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 import { commentSchema } from '../utils/validators';
 
 const router = Router();
+router.use(apiRateLimit);
 
 function enrichComment(comment: (typeof db.comments)[number]) {
   const author = db.users.find((user) => user.id === comment.authorId);

@@ -2,9 +2,11 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db, logActivity, now } from '../data/store';
 import { AuthRequest, authenticate } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 import { ratingSchema } from '../utils/validators';
 
 const router = Router();
+router.use(apiRateLimit);
 
 router.get('/narrative/:narrativeId', (req, res) => {
   const ratings = db.ratings.filter((rating) => rating.narrativeId === req.params.narrativeId);

@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { db } from '../data/store';
 import { authenticate, requireRole } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
+router.use(apiRateLimit);
 
 router.get('/dashboard', authenticate, requireRole('admin', 'educator'), (_req, res) => {
   const popularNarratives = [...db.narratives]

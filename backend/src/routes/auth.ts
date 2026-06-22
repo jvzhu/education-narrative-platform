@@ -3,9 +3,11 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { db, now } from '../data/store';
 import { authenticate, AuthRequest, createToken } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 import { registerSchema } from '../utils/validators';
 
 const router = Router();
+router.use(apiRateLimit);
 
 router.post('/register', async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);

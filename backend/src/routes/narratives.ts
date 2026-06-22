@@ -2,9 +2,11 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db, logActivity, now } from '../data/store';
 import { AuthRequest, authenticate } from '../middleware/auth';
+import { apiRateLimit } from '../middleware/rateLimit';
 import { narrativeSchema } from '../utils/validators';
 
 const router = Router();
+router.use(apiRateLimit);
 
 function formatNarrative(narrative: (typeof db.narratives)[number]) {
   const author = db.users.find((user) => user.id === narrative.authorId);
@@ -20,6 +22,19 @@ function formatNarrative(narrative: (typeof db.narratives)[number]) {
       avatar: 'https://placehold.co/80x80'
     }
   };
+}
+
+function canManageNarrative(userId: string, role: string, narrativeId: string, authorId: string) {
+  if (authorId === userId || role === 'admin') {
+    return true;
+  }
+
+  return db.permissions.some(
+    (permission) =>
+      permission.narrativeId === narrativeId &&
+      permission.userId === userId &&
+      permission.level === 'editor'
+  );
 }
 
 router.get('/', (req, res) => {
@@ -83,8 +98,7 @@ router.put('/:id', authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
 
-  const canEdit = narrative.authorId === req.user!.id || req.user!.role === 'admin' ||
-    db.permissions.some((p) => p.narrativeId === narrative.id && p.userId === req.user!.id && p.level === 'editor');
+  const canEdit = canManageNarrative(req.user!.id, req.user!.role, narrative.id, narrative.authorId);
   if (!canEdit) return res.status(403).json({ message: 'Forbidden' });
 
   const parsed = narrativeSchema.partial().safeParse(req.body);
@@ -101,7 +115,7 @@ router.put('/:id', authenticate, (req: AuthRequest, res) => {
 router.patch('/:id/publish', authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
-  if (narrative.authorId !== req.user!.id && req.user!.role !== 'admin') {
+  if (!canManageNarrative(req.user!.id, req.user!.role, narrative.id, narrative.authorId)) {
     return res.status(403).json({ message: 'Forbidden' });
   }
   narrative.status = 'published';
