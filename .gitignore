@@ -1,0 +1,1 @@
+# Dependencies\nnode_modules/\n/.pnp\n.pnp.js\n\n# Testing\n/coverage\n\n# Production\n/build\n/dist\n\n# Misc\n.DS_Store\n.env\n.env.local\n.env.*.local\n\n# Logs\nnpm-debug.log*\nyarn-debug.log*\nyarn-error.log*\n\n# IDE\n.vscode/\n.idea/\n*.swp\n*.swo\n*~\n\n# OS\n.DS_Store\nThumbs.db\n\n# Docker\n.docker/\n
