@@ -1,0 +1,1 @@
+FROM node:20-alpine as builder\n\nWORKDIR /app\n\nCOPY package*.json ./\n\nRUN npm ci\n\nCOPY . .\n\nRUN npm run build\n\nFROM nginx:alpine\n\nCOPY --from=builder /app/dist /usr/share/nginx/html\n\nCOPY nginx.conf /etc/nginx/conf.d/default.conf\n\nEXPOSE 80\n\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n
