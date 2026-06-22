@@ -1,1 +1,109 @@
-import { useQuery } from 'react-query';\nimport { useState } from 'react';\nimport { storyAPI } from '../services/api';\nimport StoryCard from '../components/StoryCard';\nimport { FaSpinner } from 'react-icons/fa';\n\nfunction HomePage() {\n  const [page, setPage] = useState(1);\n  const [category, setCategory] = useState('');\n\n  const { data, isLoading, error } = useQuery(\n    ['stories', page, category],\n    () => storyAPI.getAllStories(page, 10, category),\n    { keepPreviousData: true }\n  );\n\n  const categories = ['teaching', 'reflection', 'reading', 'student-growth', 'classroom', 'other'];\n\n  return (\n    <div className=\"space-y-8\">\n      {/* Hero Section */}\n      <div className=\"bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg p-12 text-center\">\n        <h1 className=\"text-4xl font-bold mb-4\">教育叙事平台</h1>\n        <p className=\"text-xl text-blue-100\">\n          在文字的世界里遇见教育的美好，书写幸福的篇章\n        </p>\n      </div>\n\n      {/* Category Filter */}\n      <div className=\"flex gap-2 overflow-x-auto pb-2\">\n        <button\n          onClick={() => {\n            setCategory('');\n            setPage(1);\n          }}\n          className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap transition ${\n            category === '' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'\n          }`}\n        >\n          全部\n        </button>\n        {categories.map((cat) => (\n          <button\n            key={cat}\n            onClick={() => {\n              setCategory(cat);\n              setPage(1);\n            }}\n            className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap transition ${\n              category === cat ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'\n            }`}\n          >\n            {cat}\n          </button>\n        ))}\n      </div>\n\n      {/* Stories Grid */}\n      {isLoading ? (\n        <div className=\"flex justify-center items-center py-12\">\n          <FaSpinner className=\"animate-spin text-4xl text-blue-600\" />\n        </div>\n      ) : error ? (\n        <div className=\"bg-red-100 text-red-800 p-4 rounded-lg\">加载失败，请稍后重试</div>\n      ) : (\n        <>\n          <div className=\"grid md:grid-cols-2 lg:grid-cols-3 gap-6\">\n            {data?.data.stories.map((story) => (\n              <StoryCard key={story._id} story={story} />\n            ))}\n          </div>\n\n          {/* Pagination */}\n          {data?.data.pagination && data.data.pagination.pages > 1 && (\n            <div className=\"flex justify-center gap-2\">\n              <button\n                disabled={page === 1}\n                onClick={() => setPage(page - 1)}\n                className=\"px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50\"\n              >\n                上一页\n              </button>\n              {Array.from({ length: data.data.pagination.pages }, (_, i) => i + 1).map((p) => (\n                <button\n                  key={p}\n                  onClick={() => setPage(p)}\n                  className={`px-4 py-2 rounded-lg ${\n                    page === p ? 'bg-blue-600 text-white' : 'bg-gray-200'\n                  }`}\n                >\n                  {p}\n                </button>\n              ))}\n              <button\n                disabled={page === data.data.pagination.pages}\n                onClick={() => setPage(page + 1)}\n                className=\"px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50\"\n              >\n                下一页\n              </button>\n            </div>\n          )}\n        </>\n      )}\n    </div>\n  );\n}\n\nexport default HomePage;\n
+import { useQuery } from 'react-query';
+import { useState } from 'react';
+import { storyAPI } from '../services/api';
+import StoryCard from '../components/StoryCard';
+import { FaSpinner } from 'react-icons/fa';
+
+function HomePage() {
+  const [page, setPage] = useState(1);
+  const [category, setCategory] = useState('');
+
+  const { data, isLoading, error } = useQuery(
+    ['stories', page, category],
+    () => storyAPI.getAllStories(page, 10, category),
+    { keepPreviousData: true }
+  );
+
+  const categories = ['teaching', 'reflection', 'reading', 'student-growth', 'classroom', 'other'];
+
+  return (
+    <div className="space-y-8">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg p-12 text-center">
+        <h1 className="text-4xl font-bold mb-4">æè²åäºå¹³å°</h1>
+        <p className="text-xl text-blue-100">
+          å¨æå­çä¸çééè§æè²çç¾å¥½ï¼ä¹¦åå¹¸ç¦çç¯ç« 
+        </p>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        <button
+          onClick={() => {
+            setCategory('');
+            setPage(1);
+          }}
+          className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap transition ${
+            category === '' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          å¨é¨
+        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => {
+              setCategory(cat);
+              setPage(1);
+            }}
+            className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap transition ${
+              category === cat ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Stories Grid */}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <FaSpinner className="animate-spin text-4xl text-blue-600" />
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 text-red-800 p-4 rounded-lg">å è½½å¤±è´¥ï¼è¯·ç¨åéè¯</div>
+      ) : (
+        <>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data?.data.stories.map((story) => (
+              <StoryCard key={story._id} story={story} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {data?.data.pagination && data.data.pagination.pages > 1 && (
+            <div className="flex justify-center gap-2">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+              >
+                ä¸ä¸é¡µ
+              </button>
+              {Array.from({ length: data.data.pagination.pages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`px-4 py-2 rounded-lg ${
+                    page === p ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+              <button
+                disabled={page === data.data.pagination.pages}
+                onClick={() => setPage(page + 1)}
+                className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+              >
+                ä¸ä¸é¡µ
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+export default HomePage;

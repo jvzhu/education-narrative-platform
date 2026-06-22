@@ -1,1 +1,45 @@
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';\n\nfunction Footer() {\n  return (\n    <footer className=\"bg-gray-800 text-white mt-12\">\n      <div className=\"container mx-auto px-4 py-8\">\n        <div className=\"grid md:grid-cols-4 gap-8\">\n          <div>\n            <h3 className=\"text-lg font-bold mb-4\">教育叙事平台</h3>\n            <p className=\"text-gray-400\">分享教育故事，传播教育智慧</p>\n          </div>\n          <div>\n            <h4 className=\"font-bold mb-4\">快速链接</h4>\n            <ul className=\"text-gray-400 space-y-2\">\n              <li><a href=\"/\" className=\"hover:text-white\">首页</a></li>\n              <li><a href=\"/\" className=\"hover:text-white\">故事</a></li>\n              <li><a href=\"/\" className=\"hover:text-white\">社区</a></li>\n            </ul>\n          </div>\n          <div>\n            <h4 className=\"font-bold mb-4\">关于</h4>\n            <ul className=\"text-gray-400 space-y-2\">\n              <li><a href=\"/\" className=\"hover:text-white\">关于我们</a></li>\n              <li><a href=\"/\" className=\"hover:text-white\">联系方式</a></li>\n              <li><a href=\"/\" className=\"hover:text-white\">隐私政策</a></li>\n            </ul>\n          </div>\n          <div>\n            <h4 className=\"font-bold mb-4\">关注我们</h4>\n            <div className=\"flex gap-4\">\n              <a href=\"#\" className=\"text-gray-400 hover:text-white\"><FaGithub size={24} /></a>\n              <a href=\"#\" className=\"text-gray-400 hover:text-white\"><FaTwitter size={24} /></a>\n              <a href=\"#\" className=\"text-gray-400 hover:text-white\"><FaLinkedin size={24} /></a>\n            </div>\n          </div>\n        </div>\n        <div className=\"border-t border-gray-700 mt-8 pt-8 text-center text-gray-400\">\n          <p>&copy; 2024 教育叙事平台. All rights reserved.</p>\n        </div>\n      </div>\n    </footer>\n  );\n}\n\nexport default Footer;\n
+import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
+
+function Footer() {
+  return (
+    <footer className="bg-gray-800 text-white mt-12">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid md:grid-cols-4 gap-8">
+          <div>
+            <h3 className="text-lg font-bold mb-4">æè²åäºå¹³å°</h3>
+            <p className="text-gray-400">åäº«æè²æäºï¼ä¼ æ­æè²æºæ§</p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4">å¿«éé¾æ¥</h4>
+            <ul className="text-gray-400 space-y-2">
+              <li><a href="/" className="hover:text-white">é¦é¡µ</a></li>
+              <li><a href="/" className="hover:text-white">æäº</a></li>
+              <li><a href="/" className="hover:text-white">ç¤¾åº</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4">å³äº</h4>
+            <ul className="text-gray-400 space-y-2">
+              <li><a href="/" className="hover:text-white">å³äºæä»¬</a></li>
+              <li><a href="/" className="hover:text-white">èç³»æ¹å¼</a></li>
+              <li><a href="/" className="hover:text-white">éç§æ¿ç­</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4">å³æ³¨æä»¬</h4>
+            <div className="flex gap-4">
+              <a href="#" className="text-gray-400 hover:text-white"><FaGithub size={24} /></a>
+              <a href="#" className="text-gray-400 hover:text-white"><FaTwitter size={24} /></a>
+              <a href="#" className="text-gray-400 hover:text-white"><FaLinkedin size={24} /></a>
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; 2024 æè²åäºå¹³å°. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;
