@@ -1,1 +1,46 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\nimport { QueryClient, QueryClientProvider } from 'react-query';\nimport { useAuthStore } from './store/authStore';\n\n// Pages\nimport HomePage from './pages/HomePage';\nimport StoryPage from './pages/StoryPage';\nimport ProfilePage from './pages/ProfilePage';\nimport CreateStoryPage from './pages/CreateStoryPage';\nimport LoginPage from './pages/LoginPage';\nimport RegisterPage from './pages/RegisterPage';\nimport NotFoundPage from './pages/NotFoundPage';\n\n// Components\nimport Header from './components/Header';\nimport Footer from './components/Footer';\n\nconst queryClient = new QueryClient();\n\nfunction App() {\n  const { token } = useAuthStore();\n\n  return (\n    <QueryClientProvider client={queryClient}>\n      <BrowserRouter>\n        <div className=\"flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100\">\n          <Header />\n          <main className=\"flex-1 container mx-auto px-4 py-8\">\n            <Routes>\n              <Route path=\"/\" element={<HomePage />} />\n              <Route path=\"/story/:id\" element={<StoryPage />} />\n              <Route path=\"/profile/:userId\" element={<ProfilePage />} />\n              <Route path=\"/login\" element={<LoginPage />} />\n              <Route path=\"/register\" element={<RegisterPage />} />\n              <Route path=\"/create\" element={token ? <CreateStoryPage /> : <Navigate to=\"/login\" />} />\n              <Route path=\"*\" element={<NotFoundPage />} />\n            </Routes>\n          </main>\n          <Footer />\n        </div>\n      </BrowserRouter>\n    </QueryClientProvider>\n  );\n}\n\nexport default App;\n
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { useAuthStore } from './store/authStore';
+
+// Pages
+import HomePage from './pages/HomePage';
+import StoryPage from './pages/StoryPage';
+import ProfilePage from './pages/ProfilePage';
+import CreateStoryPage from './pages/CreateStoryPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import NotFoundPage from './pages/NotFoundPage';
+
+// Components
+import Header from './components/Header';
+import Footer from './components/Footer';
+
+const queryClient = new QueryClient();
+
+function App() {
+  const { token } = useAuthStore();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+          <Header />
+          <main className="flex-1 container mx-auto px-4 py-8">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/story/:id" element={<StoryPage />} />
+              <Route path="/profile/:userId" element={<ProfilePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/create" element={token ? <CreateStoryPage /> : <Navigate to="/login" />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+}
+
+export default App;

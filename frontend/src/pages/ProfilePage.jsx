@@ -1,1 +1,27 @@
-import { useParams } from 'react-router-dom';\nimport { useQuery } from 'react-query';\nimport { storyAPI } from '../services/api';\nimport StoryCard from '../components/StoryCard';\n\nfunction ProfilePage() {\n  const { userId } = useParams();\n  const { data, isLoading } = useQuery(['userStories', userId], () => storyAPI.getUserStories(userId));\n\n  if (isLoading) return <div>加载中...</div>;\n\n  return (\n    <div className=\"space-y-8\">\n      <div className=\"bg-white rounded-lg shadow-md p-8\">\n        <h1 className=\"text-3xl font-bold mb-4\">教师故事集</h1>\n        <p className=\"text-gray-600\">这是教师发布的所有教育故事</p>\n      </div>\n      <div className=\"grid md:grid-cols-2 lg:grid-cols-3 gap-6\">\n        {data?.data.stories.map(story => (\n          <StoryCard key={story._id} story={story} />\n        ))}\n      </div>\n    </div>\n  );\n}\n\nexport default ProfilePage;\n
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { storyAPI } from '../services/api';
+import StoryCard from '../components/StoryCard';
+
+function ProfilePage() {
+  const { userId } = useParams();
+  const { data, isLoading } = useQuery(['userStories', userId], () => storyAPI.getUserStories(userId));
+
+  if (isLoading) return <div>å è½½ä¸­...</div>;
+
+  return (
+    <div className="space-y-8">
+      <div className="bg-white rounded-lg shadow-md p-8">
+        <h1 className="text-3xl font-bold mb-4">æå¸æäºé</h1>
+        <p className="text-gray-600">è¿æ¯æå¸åå¸çæææè²æäº</p>
+      </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data?.data.stories.map(story => (
+          <StoryCard key={story._id} story={story} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default ProfilePage;

@@ -1,1 +1,64 @@
-import { useState } from 'react';\nimport { useNavigate, Link } from 'react-router-dom';\nimport { authAPI } from '../services/api';\nimport { useAuthStore } from '../store/authStore';\n\nfunction LoginPage() {\n  const [email, setEmail] = useState('');\n  const [password, setPassword] = useState('');\n  const [error, setError] = useState('');\n  const [loading, setLoading] = useState(false);\n  const navigate = useNavigate();\n  const { login } = useAuthStore();\n\n  const handleSubmit = async (e) => {\n    e.preventDefault();\n    setLoading(true);\n    try {\n      const { data } = await authAPI.login(email, password);\n      login(data.token, data.user);\n      navigate('/');\n    } catch (err) {\n      setError(err.response?.data?.message || '登录失败');\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className=\"max-w-md mx-auto bg-white rounded-lg shadow-md p-8\">\n      <h2 className=\"text-2xl font-bold mb-6 text-center\">登录</h2>\n      {error && <div className=\"bg-red-100 text-red-800 p-3 rounded-lg mb-4\">{error}</div>}\n      <form onSubmit={handleSubmit} className=\"space-y-4\">\n        <input\n          type=\"email\"\n          placeholder=\"邮箱\"\n          value={email}\n          onChange={(e) => setEmail(e.target.value)}\n          required\n          className=\"w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600\"\n        />\n        <input\n          type=\"password\"\n          placeholder=\"密码\"\n          value={password}\n          onChange={(e) => setPassword(e.target.value)}\n          required\n          className=\"w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600\"\n        />\n        <button\n          type=\"submit\"\n          disabled={loading}\n          className=\"w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50\"\n        >\n          {loading ? '登录中...' : '登录'}\n        </button>\n      </form>\n      <p className=\"text-center mt-4\">\n        没有账号？<Link to=\"/register\" className=\"text-blue-600 hover:underline\">立即注册</Link>\n      </p>\n    </div>\n  );\n}\n\nexport default LoginPage;\n
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { authAPI } from '../services/api';
+import { useAuthStore } from '../store/authStore';
+
+function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data } = await authAPI.login(email, password);
+      login(data.token, data.user);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'ç»å½å¤±è´¥');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+      <h2 className="text-2xl font-bold mb-6 text-center">ç»å½</h2>
+      {error && <div className="bg-red-100 text-red-800 p-3 rounded-lg mb-4">{error}</div>}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="email"
+          placeholder="é®ç®±"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <input
+          type="password"
+          placeholder="å¯ç "
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          {loading ? 'ç»å½ä¸­...' : 'ç»å½'}
+        </button>
+      </form>
+      <p className="text-center mt-4">
+        æ²¡æè´¦å·ï¼<Link to="/register" className="text-blue-600 hover:underline">ç«å³æ³¨å</Link>
+      </p>
+    </div>
+  );
+}
+
+export default LoginPage;

@@ -1,1 +1,95 @@
-import { useState } from 'react';\nimport { useNavigate } from 'react-router-dom';\nimport { storyAPI } from '../services/api';\n\nfunction CreateStoryPage() {\n  const [formData, setFormData] = useState({\n    title: '',\n    content: '',\n    category: 'teaching',\n    tags: '',\n    status: 'published'\n  });\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState('');\n  const navigate = useNavigate();\n\n  const handleChange = (e) => {\n    const { name, value } = e.target;\n    setFormData(prev => ({ ...prev, [name]: value }));\n  };\n\n  const handleSubmit = async (e) => {\n    e.preventDefault();\n    setLoading(true);\n    try {\n      const data = {\n        ...formData,\n        tags: formData.tags.split(',').map(tag => tag.trim())\n      };\n      await storyAPI.createStory(data);\n      navigate('/');\n    } catch (err) {\n      setError(err.response?.data?.message || '发布失败');\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className=\"max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8\">\n      <h1 className=\"text-3xl font-bold mb-6\">发布新故事</h1>\n      {error && <div className=\"bg-red-100 text-red-800 p-4 rounded-lg mb-4\">{error}</div>}\n      <form onSubmit={handleSubmit} className=\"space-y-6\">\n        <input\n          type=\"text\"\n          name=\"title\"\n          placeholder=\"故事标题\"\n          value={formData.title}\n          onChange={handleChange}\n          required\n          className=\"w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600\"\n        />\n        <textarea\n          name=\"content\"\n          placeholder=\"故事内容\"\n          value={formData.content}\n          onChange={handleChange}\n          required\n          rows=\"10\"\n          className=\"w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600\"\n        />\n        <select\n          name=\"category\"\n          value={formData.category}\n          onChange={handleChange}\n          className=\"w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600\"\n        >\n          <option value=\"teaching\">教学</option>\n          <option value=\"reflection\">反思</option>\n          <option value=\"reading\">阅读</option>\n          <option value=\"student-growth\">学生成长</option>\n          <option value=\"classroom\">课堂</option>\n          <option value=\"other\">其他</option>\n        </select>\n        <input\n          type=\"text\"\n          name=\"tags\"\n          placeholder=\"标签（用逗号分隔）\"\n          value={formData.tags}\n          onChange={handleChange}\n          className=\"w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600\"\n        />\n        <button\n          type=\"submit\"\n          disabled={loading}\n          className=\"w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50\"\n        >\n          {loading ? '发布中...' : '发布故事'}\n        </button>\n      </form>\n    </div>\n  );\n}\n\nexport default CreateStoryPage;\n
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { storyAPI } from '../services/api';
+
+function CreateStoryPage() {
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    category: 'teaching',
+    tags: '',
+    status: 'published'
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const data = {
+        ...formData,
+        tags: formData.tags.split(',').map(tag => tag.trim())
+      };
+      await storyAPI.createStory(data);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'åå¸å¤±è´¥');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
+      <h1 className="text-3xl font-bold mb-6">åå¸æ°æäº</h1>
+      {error && <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">{error}</div>}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <input
+          type="text"
+          name="title"
+          placeholder="æäºæ é¢"
+          value={formData.title}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <textarea
+          name="content"
+          placeholder="æäºåå®¹"
+          value={formData.content}
+          onChange={handleChange}
+          required
+          rows="10"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        >
+          <option value="teaching">æå­¦</option>
+          <option value="reflection">åæ</option>
+          <option value="reading">éè¯»</option>
+          <option value="student-growth">å­¦çæé¿</option>
+          <option value="classroom">è¯¾å </option>
+          <option value="other">å¶ä»</option>
+        </select>
+        <input
+          type="text"
+          name="tags"
+          placeholder="æ ç­¾ï¼ç¨éå·åéï¼"
+          value={formData.tags}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          {loading ? 'åå¸ä¸­...' : 'åå¸æäº'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default CreateStoryPage;
