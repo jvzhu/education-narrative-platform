@@ -8,11 +8,11 @@ import { apiRateLimit } from '../middleware/rateLimit';
 const router = Router();
 router.use(apiRateLimit);
 
-router.get('/', authenticate, requireRole('admin'), (_req, res) => {
+router.get('/', apiRateLimit, authenticate, requireRole('admin'), (_req, res) => {
   res.json(db.users.map(({ passwordHash, ...user }) => user));
 });
 
-router.post('/', authenticate, requireRole('admin'), async (req, res) => {
+router.post('/', apiRateLimit, authenticate, requireRole('admin'), async (req, res) => {
   const { email, password, name, role } = req.body as { email?: string; password?: string; name?: string; role?: 'admin' | 'educator' | 'student' };
   if (!email || !password || !name || !role) {
     return res.status(400).json({ message: 'email/password/name/role are required' });
@@ -34,7 +34,7 @@ router.post('/', authenticate, requireRole('admin'), async (req, res) => {
   res.status(201).json(safeUser);
 });
 
-router.get('/:id', authenticate, (req: AuthRequest, res) => {
+router.get('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const target = db.users.find((user) => user.id === req.params.id);
   if (!target) return res.status(404).json({ message: 'User not found' });
   if (req.user?.role !== 'admin' && req.user?.id !== target.id) {
@@ -44,7 +44,7 @@ router.get('/:id', authenticate, (req: AuthRequest, res) => {
   res.json(safeUser);
 });
 
-router.put('/:id', authenticate, async (req: AuthRequest, res) => {
+router.put('/:id', apiRateLimit, authenticate, async (req: AuthRequest, res) => {
   const target = db.users.find((user) => user.id === req.params.id);
   if (!target) return res.status(404).json({ message: 'User not found' });
   if (req.user?.role !== 'admin' && req.user?.id !== target.id) {
@@ -61,7 +61,7 @@ router.put('/:id', authenticate, async (req: AuthRequest, res) => {
   res.json(safeUser);
 });
 
-router.delete('/:id', authenticate, requireRole('admin'), (req, res) => {
+router.delete('/:id', apiRateLimit, authenticate, requireRole('admin'), (req, res) => {
   const index = db.users.findIndex((user) => user.id === req.params.id);
   if (index === -1) return res.status(404).json({ message: 'User not found' });
   db.users.splice(index, 1);
