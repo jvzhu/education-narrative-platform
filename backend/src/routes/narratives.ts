@@ -7,6 +7,7 @@ import { narrativeSchema } from '../utils/validators';
 
 const router = Router();
 router.use(apiRateLimit);
+const narrativeWriteRateLimit = apiRateLimit;
 
 function formatNarrative(narrative: (typeof db.narratives)[number]) {
   const author = db.users.find((user) => user.id === narrative.authorId);
@@ -112,7 +113,7 @@ router.put('/:id', authenticate, (req: AuthRequest, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.patch('/:id/publish', apiRateLimit, authenticate, (req: AuthRequest, res) => {
+router.patch('/:id/publish', narrativeWriteRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (!canManageNarrative(req.user!.id, req.user!.role, narrative.id, narrative.authorId)) {
