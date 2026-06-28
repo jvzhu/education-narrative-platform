@@ -37,7 +37,7 @@ router.post('/share', authenticate, (req: AuthRequest, res) => {
   res.status(201).json(permission);
 });
 
-router.get('/narrative/:narrativeId', authenticate, (req: AuthRequest, res) => {
+router.get('/narrative/:narrativeId', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.narrativeId);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
 
