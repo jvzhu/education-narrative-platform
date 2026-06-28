@@ -54,7 +54,7 @@ function handleCreateComment(req: AuthRequest, res: Response) {
 router.post('/narrative/:narrativeId', apiRateLimit, authenticate, handleCreateComment);
 router.post('/story/:narrativeId', apiRateLimit, authenticate, handleCreateComment);
 
-router.put('/:id', authenticate, (req: AuthRequest, res) => {
+router.put('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
   if (!comment) return res.status(404).json({ message: 'Comment not found' });
   if (comment.authorId !== req.user!.id && req.user!.role !== 'admin') {
