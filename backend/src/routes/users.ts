@@ -7,6 +7,7 @@ import { apiRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
 router.use(apiRateLimit);
+const updateUserRateLimit = apiRateLimit;
 
 router.get('/', apiRateLimit, authenticate, requireRole('admin'), (_req, res) => {
   res.json(db.users.map(({ passwordHash, ...user }) => user));
@@ -44,7 +45,7 @@ router.get('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   res.json(safeUser);
 });
 
-router.put('/:id', apiRateLimit, authenticate, async (req: AuthRequest, res) => {
+router.put('/:id', updateUserRateLimit, authenticate, async (req: AuthRequest, res) => {
   const target = db.users.find((user) => user.id === req.params.id);
   if (!target) return res.status(404).json({ message: 'User not found' });
   if (req.user?.role !== 'admin' && req.user?.id !== target.id) {
