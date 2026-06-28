@@ -51,8 +51,10 @@ function handleCreateComment(req: AuthRequest, res: Response) {
   res.status(201).json(enrichComment(comment));
 }
 
-router.post('/narrative/:narrativeId', apiRateLimit, authenticate, handleCreateComment);
-router.post('/story/:narrativeId', apiRateLimit, authenticate, handleCreateComment);
+const rateLimitedCreateComment = [apiRateLimit, handleCreateComment] as const;
+
+router.post('/narrative/:narrativeId', authenticate, ...rateLimitedCreateComment);
+router.post('/story/:narrativeId', authenticate, ...rateLimitedCreateComment);
 
 router.put('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
