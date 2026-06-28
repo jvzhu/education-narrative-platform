@@ -68,7 +68,7 @@ router.put('/:id', authenticate, (req: AuthRequest, res) => {
   res.json(comment);
 });
 
-router.delete('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
+function handleDeleteComment(req: AuthRequest, res: Response) {
   const index = db.comments.findIndex((item) => item.id === req.params.id);
   if (index === -1) return res.status(404).json({ message: 'Comment not found' });
   const comment = db.comments[index];
@@ -77,7 +77,9 @@ router.delete('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   }
   db.comments.splice(index, 1);
   res.status(204).send();
-});
+}
+
+router.delete('/:id', apiRateLimit, authenticate, handleDeleteComment);
 
 router.post('/:id/like', authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
