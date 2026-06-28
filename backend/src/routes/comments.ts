@@ -81,7 +81,7 @@ function handleDeleteComment(req: AuthRequest, res: Response) {
 
 router.delete('/:id', apiRateLimit, authenticate, handleDeleteComment);
 
-router.post('/:id/like', authenticate, (req: AuthRequest, res) => {
+router.post('/:id/like', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
   if (!comment) return res.status(404).json({ message: 'Comment not found' });
 
