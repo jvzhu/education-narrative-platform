@@ -54,7 +54,7 @@ router.get('/profile', authenticate, (req: AuthRequest, res) => {
   res.json({ id: user.id, email: user.email, role: user.role, name: user.name, createdAt: user.createdAt });
 });
 
-router.post('/logout', authenticate, (_req, res) => {
+router.post('/logout', apiRateLimit, authenticate, (_req, res) => {
   res.json({ message: 'Logged out' });
 });
 
