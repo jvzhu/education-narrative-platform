@@ -4,7 +4,6 @@ import { authenticate, requireRole } from '../middleware/auth';
 import { apiRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
-router.use(apiRateLimit);
 
 router.get('/dashboard', apiRateLimit, authenticate, requireRole('admin', 'educator'), (_req, res) => {
   const popularNarratives = [...db.narratives]
