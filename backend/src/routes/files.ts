@@ -42,7 +42,7 @@ router.post('/upload', apiRateLimit, authenticate, upload.single('file'), (req: 
   res.status(201).json(meta);
 });
 
-router.get('/', apiRateLimit, authenticate, (req: AuthRequest, res) => {
+router.get('/', authenticate, apiRateLimit, (req: AuthRequest, res) => {
   if (req.user?.role === 'admin') return res.json(db.files);
   res.json(db.files.filter((file) => file.uploaderId === req.user?.id));
 });
