@@ -94,7 +94,7 @@ router.get('/:id', (req, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.put('/:id', authenticate, (req: AuthRequest, res) => {
+router.put('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
 
