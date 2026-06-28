@@ -6,7 +6,7 @@ import { apiRateLimit } from '../middleware/rateLimit';
 const router = Router();
 router.use(apiRateLimit);
 
-router.get('/dashboard', authenticate, requireRole('admin', 'educator'), (_req, res) => {
+router.get('/dashboard', apiRateLimit, authenticate, requireRole('admin', 'educator'), (_req, res) => {
   const popularNarratives = [...db.narratives]
     .sort((a, b) => b.viewCount - a.viewCount)
     .slice(0, 10);
