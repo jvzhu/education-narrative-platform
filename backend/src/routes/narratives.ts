@@ -124,7 +124,7 @@ router.patch('/:id/publish', apiRateLimit, authenticate, (req: AuthRequest, res)
   res.json(formatNarrative(narrative));
 });
 
-router.post('/:id/like', authRateLimited, authenticate, (req: AuthRequest, res) => {
+router.post('/:id/like', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (narrative.likes.includes(req.user!.id)) {
