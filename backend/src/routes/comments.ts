@@ -51,10 +51,10 @@ function handleCreateComment(req: AuthRequest, res: Response) {
   res.status(201).json(enrichComment(comment));
 }
 
-router.post('/narrative/:narrativeId', apiRateLimit, authenticate, handleCreateComment);
-router.post('/story/:narrativeId', apiRateLimit, authenticate, handleCreateComment);
+router.post('/narrative/:narrativeId', authenticate, handleCreateComment);
+router.post('/story/:narrativeId', authenticate, handleCreateComment);
 
-router.put('/:id', authenticate, (req: AuthRequest, res) => {
+router.put('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
   if (!comment) return res.status(404).json({ message: 'Comment not found' });
   if (comment.authorId !== req.user!.id && req.user!.role !== 'admin') {
@@ -79,9 +79,9 @@ function handleDeleteComment(req: AuthRequest, res: Response) {
   res.status(204).send();
 }
 
-router.delete('/:id', apiRateLimit, authenticate, handleDeleteComment);
+router.delete('/:id', authenticate, handleDeleteComment);
 
-router.post('/:id/like', apiRateLimit, authenticate, (req: AuthRequest, res) => {
+router.post('/:id/like', authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
   if (!comment) return res.status(404).json({ message: 'Comment not found' });
 
