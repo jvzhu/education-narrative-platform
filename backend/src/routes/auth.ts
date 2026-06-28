@@ -48,13 +48,13 @@ router.post('/login', async (req, res) => {
   res.json({ token, user: { id: user.id, email: user.email, role: user.role, name: user.name } });
 });
 
-router.get('/profile', authenticate, (req: AuthRequest, res) => {
+router.get('/profile', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const user = db.users.find((item) => item.id === req.user?.id);
   if (!user) return res.status(404).json({ message: 'User not found' });
   res.json({ id: user.id, email: user.email, role: user.role, name: user.name, createdAt: user.createdAt });
 });
 
-router.post('/logout', authenticate, (_req, res) => {
+router.post('/logout', apiRateLimit, authenticate, (_req, res) => {
   res.json({ message: 'Logged out' });
 });
 
