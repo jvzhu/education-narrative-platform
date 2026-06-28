@@ -14,7 +14,7 @@ router.get('/narrative/:narrativeId', (req, res) => {
   res.json({ ratings, average, count: ratings.length });
 });
 
-router.post('/narrative/:narrativeId', authenticate, (req: AuthRequest, res) => {
+router.post('/narrative/:narrativeId', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrativeId = String(req.params.narrativeId);
   const parsed = ratingSchema.safeParse(req.body);
   if (!parsed.success) {
