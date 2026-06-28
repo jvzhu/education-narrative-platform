@@ -68,7 +68,7 @@ router.put('/:id', authenticate, (req: AuthRequest, res) => {
   res.json(comment);
 });
 
-router.delete('/:id', authenticate, (req: AuthRequest, res) => {
+router.delete('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const index = db.comments.findIndex((item) => item.id === req.params.id);
   if (index === -1) return res.status(404).json({ message: 'Comment not found' });
   const comment = db.comments[index];
