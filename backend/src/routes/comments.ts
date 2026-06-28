@@ -79,7 +79,7 @@ function handleDeleteComment(req: AuthRequest, res: Response) {
   res.status(204).send();
 }
 
-router.delete('/:id', authenticate, handleDeleteComment);
+router.delete('/:id', apiRateLimit, authenticate, handleDeleteComment);
 
 router.post('/:id/like', authenticate, (req: AuthRequest, res) => {
   const comment = db.comments.find((item) => item.id === req.params.id);
