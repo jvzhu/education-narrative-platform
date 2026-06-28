@@ -146,7 +146,7 @@ router.post('/:id/bookmark', apiRateLimit, authenticate, (req: AuthRequest, res)
   res.json({ bookmarks: narrative.bookmarks.length });
 });
 
-router.delete('/:id', authRateLimited, authenticate, (req: AuthRequest, res) => {
+router.delete('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrativeId = String(req.params.id);
   const index = db.narratives.findIndex((item) => item.id === narrativeId);
   if (index === -1) return res.status(404).json({ message: 'Narrative not found' });
