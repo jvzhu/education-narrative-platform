@@ -112,7 +112,7 @@ router.put('/:id', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.patch('/:id/publish', authRateLimited, authenticate, (req: AuthRequest, res) => {
+router.patch('/:id/publish', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (!canManageNarrative(req.user!.id, req.user!.role, narrative.id, narrative.authorId)) {
