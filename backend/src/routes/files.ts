@@ -20,7 +20,7 @@ const ALLOWED_MIME_TYPES = new Set([
   'video/mp4'
 ]);
 
-router.post('/upload', authenticate, upload.single('file'), (req: AuthRequest, res) => {
+router.post('/upload', apiRateLimit, authenticate, upload.single('file'), (req: AuthRequest, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'File is required' });
   }
@@ -42,7 +42,7 @@ router.post('/upload', authenticate, upload.single('file'), (req: AuthRequest, r
   res.status(201).json(meta);
 });
 
-router.get('/', authenticate, (req: AuthRequest, res) => {
+router.get('/', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   if (req.user?.role === 'admin') return res.json(db.files);
   res.json(db.files.filter((file) => file.uploaderId === req.user?.id));
 });
