@@ -8,12 +8,13 @@ import { apiRateLimit } from '../middleware/rateLimit';
 const router = Router();
 router.use(apiRateLimit);
 
+const createUserRateLimit = apiRateLimit;
 router.get('/', authenticate, requireRole('admin'), (_req, res) => {
   res.json(db.users.map(({ passwordHash, ...user }) => user));
 });
 
 router.post('/', authenticate, requireRole('admin'), async (req, res) => {
-  const { email, password, name, role } = req.body as { email?: string; password?: string; name?: string; role?: 'admin' | 'educator' | 'student' };
+router.post('/', createUserRateLimit, authenticate, requireRole('admin'), async (req, res) => {
   if (!email || !password || !name || !role) {
     return res.status(400).json({ message: 'email/password/name/role are required' });
   }
