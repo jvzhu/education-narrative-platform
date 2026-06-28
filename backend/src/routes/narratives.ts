@@ -124,7 +124,7 @@ router.patch('/:id/publish', authenticate, (req: AuthRequest, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.post('/:id/like', authenticate, (req: AuthRequest, res) => {
+router.post('/:id/like', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (narrative.likes.includes(req.user!.id)) {
@@ -135,7 +135,7 @@ router.post('/:id/like', authenticate, (req: AuthRequest, res) => {
   res.json({ likes: narrative.likes.length });
 });
 
-router.post('/:id/bookmark', authenticate, (req: AuthRequest, res) => {
+router.post('/:id/bookmark', apiRateLimit, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (narrative.bookmarks.includes(req.user!.id)) {
