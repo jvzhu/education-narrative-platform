@@ -7,6 +7,7 @@ import { narrativeSchema } from '../utils/validators';
 
 const router = Router();
 router.use(apiRateLimit);
+const authRateLimited = apiRateLimit;
 
 function formatNarrative(narrative: (typeof db.narratives)[number]) {
   const author = db.users.find((user) => user.id === narrative.authorId);
@@ -94,7 +95,7 @@ router.get('/:id', (req, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.put('/:id', authenticate, (req: AuthRequest, res) => {
+router.put('/:id', authRateLimited, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
 
@@ -112,7 +113,7 @@ router.put('/:id', authenticate, (req: AuthRequest, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.patch('/:id/publish', authenticate, (req: AuthRequest, res) => {
+router.patch('/:id/publish', authRateLimited, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (!canManageNarrative(req.user!.id, req.user!.role, narrative.id, narrative.authorId)) {
@@ -124,7 +125,7 @@ router.patch('/:id/publish', authenticate, (req: AuthRequest, res) => {
   res.json(formatNarrative(narrative));
 });
 
-router.post('/:id/like', apiRateLimit, authenticate, (req: AuthRequest, res) => {
+router.post('/:id/like', authRateLimited, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (narrative.likes.includes(req.user!.id)) {
@@ -135,7 +136,7 @@ router.post('/:id/like', apiRateLimit, authenticate, (req: AuthRequest, res) => 
   res.json({ likes: narrative.likes.length });
 });
 
-router.post('/:id/bookmark', apiRateLimit, authenticate, (req: AuthRequest, res) => {
+router.post('/:id/bookmark', authRateLimited, authenticate, (req: AuthRequest, res) => {
   const narrative = db.narratives.find((item) => item.id === req.params.id);
   if (!narrative) return res.status(404).json({ message: 'Narrative not found' });
   if (narrative.bookmarks.includes(req.user!.id)) {
@@ -146,7 +147,7 @@ router.post('/:id/bookmark', apiRateLimit, authenticate, (req: AuthRequest, res)
   res.json({ bookmarks: narrative.bookmarks.length });
 });
 
-router.delete('/:id', authenticate, (req: AuthRequest, res) => {
+router.delete('/:id', authRateLimited, authenticate, (req: AuthRequest, res) => {
   const narrativeId = String(req.params.id);
   const index = db.narratives.findIndex((item) => item.id === narrativeId);
   if (index === -1) return res.status(404).json({ message: 'Narrative not found' });
